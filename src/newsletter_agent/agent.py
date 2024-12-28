@@ -81,7 +81,7 @@ class DailyUpdateAgent:
         return {title: url for title, url in title_link_pairs if url}
 
     async def _summarize_article(self, article_url: str) -> str:
-        logger.info("Summarizing article:", article_url)
+        logger.info(f"Summarizing article: {article_url}")
         text, _ = scrape_and_extract_text(article_url)
         article = await self.summary_agent.run(text)
         return article.summary

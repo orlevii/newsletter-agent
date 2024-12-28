@@ -19,7 +19,7 @@ class SummaryAgent:
         self.agent = Agent(  # type: ignore[var-annotated]
             model="openai:gpt-4o-mini",
             system_prompt=SYSTEM_PROMPT.format(
-                GUIDELINES=config.guidelines.relevance
+                GUIDELINES=config.guidelines.summarization
             ).strip(),
             result_type=SummarisedArticle,
         )
