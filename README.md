@@ -25,7 +25,7 @@ guidelines:
     }
 
   summarization: |
-      * Use bullets
+    * Use bullets
 
 sources:
   - name: Venturebeat
@@ -42,5 +42,12 @@ sources:
 docker run --rm -it \
   -v $(pwd):/data \
   -e OPENAI_API_KEY=<YOUR_API_KEY> \
-  newsletter-agent:latest
+  orlevi/newsletter-agent:latest
+```
+Or with `.env` file:
+```bash
+docker run --rm -it \
+  -v $(pwd):/data \
+  --env-file .env \
+  orlevi/newsletter-agent:latest
 ```
