@@ -1,6 +1,9 @@
 name: build
 
-on: [ push ]
+on:
+  push:
+    branches:
+      - "*"
 
 jobs:
   task:
@@ -10,10 +13,6 @@ jobs:
         task: [ "lint", "mypy" ]
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - run: git branch --track main origin/main
-        if: github.ref_name != 'main'
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:

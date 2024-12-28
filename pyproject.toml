@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "newsletter-agent"
-version = "0.0.1"
+version = "0.1.0"
 description = ""
 authors = ["Or Levi <orlevi128@gmail.com>"]
 
