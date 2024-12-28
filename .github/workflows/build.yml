@@ -33,4 +33,3 @@ jobs:
       - name: Run ${{ matrix.task }}
         run: |
           poe ${{ matrix.task }}
-          
