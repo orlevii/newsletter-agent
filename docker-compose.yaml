@@ -1,0 +1,10 @@
+services:
+  newsletter-agent:
+    build: .
+    image: newsletter-agent:latest
+    volumes:
+      - ./data:/data
+    env_file:
+      - .env
+
+# docker run --rm -it -v ./data:/data --env-file .env newsletter-agent:latest
