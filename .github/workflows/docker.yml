@@ -22,11 +22,26 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
+    - name: Determine Docker Tag
+      run: |
+        export REPO=orlevi/newsletter-agent
+        if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+          echo "DOCKER_TAGS=${REPO}:${{ github.ref_name }},${REPO}:latest" >> $GITHUB_ENV
+        else
+          echo "DOCKER_TAGS=${REPO}:nightly" >> $GITHUB_ENV
+        fi
+
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
         push: true
         platforms: linux/amd64,linux/arm64
-        tags: orlevi/newsletter-agent:dev
+        tags: ${{ env.DOCKER_TAGS }}
         cache-from: type=registry,ref=orlevi/newsletter-agent:cache
         cache-to: type=registry,ref=orlevi/newsletter-agent:cache,mode=max
+
+    - name: GH Release
+      if: github.ref_type == 'tag'
+      uses: docker://antonyurchenko/git-release:v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
