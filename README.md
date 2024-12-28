@@ -25,7 +25,7 @@ guidelines:
     }
 
   summarization: |
-      * Use bullets
+    * Use bullets
 
 sources:
   - name: Venturebeat
