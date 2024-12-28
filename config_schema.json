@@ -1,26 +1,55 @@
 {
-  "properties": {
-    "relevance_guidelines": {
-      "default": "\n* The article is about LLMs\n* The article is about big AI companies like OpenAI, Anthropic, Google, Meta, etc...\n* The article is about fundraising or acquisitions in the AI space\n* The article is about prompt evaluations\n\n## Example 1\nInput:\nPerplexity's Carbon integration will make it easier for enterprises to connect their data to AI search\n\nOutput:\n{\n  \"reason\": \"The article is Perplexity's Carbon integration, that means the article does not meet the criteria\",\n  \"is_relevant\": false\n}\n",
-      "title": "Relevance Guidelines",
-      "type": "string"
+  "$defs": {
+    "Guidelines": {
+      "properties": {
+        "relevance": {
+          "default": "\n* The article is about LLMs\n",
+          "title": "Relevance",
+          "type": "string"
+        },
+        "summarization": {
+          "default": "",
+          "title": "Summarization",
+          "type": "string"
+        }
+      },
+      "title": "Guidelines",
+      "type": "object"
     },
-    "summarization_guidelines": {
-      "default": "",
-      "title": "Summarization Guidelines",
-      "type": "string"
+    "Source": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "url"
+      ],
+      "title": "Source",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "guidelines": {
+      "$ref": "#/$defs/Guidelines",
+      "default": {
+        "relevance": "\n* The article is about LLMs\n",
+        "summarization": ""
+      }
     },
     "sources": {
-      "additionalProperties": {
-        "type": "string"
-      },
-      "default": {
-        "venturebeat": "https://venturebeat.com/category/ai/",
-        "techcrunch": "https://techcrunch.com/category/artificial-intelligence/",
-        "huggingface": "https://huggingface.co/blog"
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Source"
       },
       "title": "Sources",
-      "type": "object"
+      "type": "array"
     }
   },
   "title": "Config",

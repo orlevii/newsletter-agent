@@ -1,5 +1,6 @@
 import os
 import sqlite3
+from typing import Any
 
 DB_FILE = "articles.db"
 
@@ -18,7 +19,7 @@ CREATE INDEX idx_created_at ON articles(created_at);
 
 
 class DB:
-    def __init__(self):
+    def __init__(self) -> None:
         self._create_database()
         self.conn = sqlite3.connect(DB_FILE)
 
@@ -32,9 +33,9 @@ class DB:
             cursor.execute(INDEX_DDL)
             connection.commit()
 
-    def query(self, sql: str, *args) -> list[sqlite3.Row]:
+    def query(self, sql: str, *args: Any) -> list[sqlite3.Row]:
         cur = self.conn.cursor()
-        cur.row_factory = sqlite3.Row
+        cur.row_factory = sqlite3.Row  # type: ignore[assignment]
         try:
             cur.execute(sql, args)
             return cur.fetchall()
@@ -53,4 +54,4 @@ class DB:
             cur.close()
 
 
-db = DB()
+db: DB = DB()

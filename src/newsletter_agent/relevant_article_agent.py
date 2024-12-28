@@ -25,10 +25,10 @@ Respond with a JSON in the following format:
 
 
 class RelevantArticleAgent:
-    def __init__(self):
-        self.agent = Agent(
+    def __init__(self) -> None:
+        self.agent = Agent(  # type: ignore[var-annotated]
             model="openai:gpt-4o-mini",
-            system_prompt=SYSTEM_PROMPT.format(GUIDELINES=config.relevance_guidelines),
+            system_prompt=SYSTEM_PROMPT.format(GUIDELINES=config.guidelines.relevance),
             result_type=RelevantArticle,
         )
 

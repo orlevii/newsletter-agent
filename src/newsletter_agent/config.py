@@ -5,30 +5,22 @@ from pydantic import BaseModel
 
 DEFAULT_GUIDELINES = """
 * The article is about LLMs
-* The article is about big AI companies like OpenAI, Anthropic, Google, Meta, etc...
-* The article is about fundraising or acquisitions in the AI space
-* The article is about prompt evaluations
-
-## Example 1
-Input:
-Perplexity's Carbon integration will make it easier for enterprises to connect their data to AI search
-
-Output:
-{
-  "reason": "The article is Perplexity's Carbon integration, that means the article does not meet the criteria",
-  "is_relevant": false
-}
 """
 
 
+class Guidelines(BaseModel):
+    relevance: str = DEFAULT_GUIDELINES
+    summarization: str = ""
+
+
+class Source(BaseModel):
+    name: str
+    url: str
+
+
 class Config(BaseModel):
-    relevance_guidelines: str = DEFAULT_GUIDELINES
-    summarization_guidelines: str = ""
-    sources: dict[str, str] = {
-        "venturebeat": "https://venturebeat.com/category/ai/",
-        "techcrunch": "https://techcrunch.com/category/artificial-intelligence/",
-        "huggingface": "https://huggingface.co/blog",
-    }
+    guidelines: Guidelines = Guidelines()
+    sources: list[Source] = []
 
 
 def _read_config() -> Config:
@@ -40,4 +32,4 @@ def _read_config() -> Config:
     return Config(**conf)
 
 
-config = _read_config()
+config: Config = _read_config()

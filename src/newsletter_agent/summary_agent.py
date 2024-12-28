@@ -15,11 +15,11 @@ Summarize the following article in simple English.
 
 
 class SummaryAgent:
-    def __init__(self):
-        self.agent = Agent(
+    def __init__(self) -> None:
+        self.agent = Agent(  # type: ignore[var-annotated]
             model="openai:gpt-4o-mini",
             system_prompt=SYSTEM_PROMPT.format(
-                GUIDELINES=config.summarization_guidelines
+                GUIDELINES=config.guidelines.relevance
             ).strip(),
             result_type=SummarisedArticle,
         )

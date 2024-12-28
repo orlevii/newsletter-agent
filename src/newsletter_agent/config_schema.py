@@ -4,7 +4,7 @@ from pathlib import Path
 from newsletter_agent.config import Config
 
 
-def main():
+def main() -> None:
     schema = Config.model_json_schema()
     schema_file = Path("config_schema.json")
     with schema_file.open("w") as f:
