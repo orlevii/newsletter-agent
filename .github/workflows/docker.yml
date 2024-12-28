@@ -2,7 +2,10 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "first_version" ]
+    push:
+      tags:
+        - "*.*.*"
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -24,12 +27,14 @@ jobs:
 
     - name: Determine Docker Tag
       run: |
-        export REPO=orlevi/newsletter-agent
+        export REPO="orlevi/newsletter-agent"
+        export DOCKER_TAGS="${REPO}:dev"
+        echo "ref_type=${{ github.ref_type }}"
         if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
-          echo "DOCKER_TAGS=${REPO}:${{ github.ref_name }},${REPO}:latest" >> $GITHUB_ENV
-        else
-          echo "DOCKER_TAGS=${REPO}:nightly" >> $GITHUB_ENV
+          DOCKER_TAGS=${REPO}:${{ github.ref_name }},${REPO}:latest,$DOCKER_TAGS
         fi
+        echo "DOCKER_TAGS=${DOCKER_TAGS}" >> $GITHUB_ENV
+        echo "Tags: $DOCKER_TAGS"
 
     - name: Build and push
       uses: docker/build-push-action@v6
