@@ -13,13 +13,18 @@ from newsletter_agent.summary_agent import SummaryAgent
 
 
 class DailyUpdateAgent:
-    def __init__(self):
+    def __init__(self) -> None:
         self.summary_agent = SummaryAgent()
         self.interesting_article_agent = RelevantArticleAgent()
 
     async def run(self) -> str:
         markdown = ["# Daily Update"]
-        for source_name, url in config.sources.items():
+        if not config.sources:
+            logger.warning("No sources defined in the config")
+        for source in config.sources:
+            source_name = source.name
+            url = source.url
+
             all_articles = await self._handle_source(source_name, url)
             articles = [a for a in all_articles if a.summary]
             if any(articles):

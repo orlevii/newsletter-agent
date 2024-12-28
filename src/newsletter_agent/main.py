@@ -17,7 +17,7 @@ if load_dotenv is not None:
     load_dotenv()
 
 
-async def main():
+async def main() -> None:
     from newsletter_agent.agent import DailyUpdateAgent
 
     logger.debug("Config: %s", json.dumps(config.model_dump(), indent=2))
