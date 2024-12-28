@@ -1,4 +1,4 @@
-from daily_update_agent.models.article import Article
+from newsletter_agent.models.article import Article
 
 from .dal import db
 

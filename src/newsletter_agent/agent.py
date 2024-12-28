@@ -1,32 +1,29 @@
 import json
 
-from daily_update_agent.interesting_article_agent import (
-    InterestingArticle,
-    InterestingArticleAgent,
+from newsletter_agent.config import config
+from newsletter_agent.models.article import Article
+from newsletter_agent.relevant_article_agent import (
+    RelevantArticle,
+    RelevantArticleAgent,
 )
-from daily_update_agent.models.article import Article
-from daily_update_agent.repositories.article_repository import ArticleRepository
-from daily_update_agent.scrape import scrape_and_extract_text
-from daily_update_agent.summary_agent import SummaryAgent
-
-SOURCES = {
-    "venturebeat": "https://venturebeat.com/category/ai/",
-    "techcrunch": "https://techcrunch.com/category/artificial-intelligence/",
-    "huggingface": "https://huggingface.co/blog",
-}
+from newsletter_agent.repositories.article_repository import ArticleRepository
+from newsletter_agent.scrape import scrape_and_extract_text
+from newsletter_agent.summary_agent import SummaryAgent
 
 
 class DailyUpdateAgent:
     def __init__(self):
         self.summary_agent = SummaryAgent()
-        self.interesting_article_agent = InterestingArticleAgent()
+        self.interesting_article_agent = RelevantArticleAgent()
 
     async def run(self) -> str:
         markdown = ["# Daily Update"]
-        for source_name, url in SOURCES.items():
-            markdown.append(f"## {source_name}")
+        for source_name, url in config.sources.items():
             all_articles = await self._handle_source(source_name, url)
             articles = [a for a in all_articles if a.summary]
+            if any(articles):
+                markdown.append(f"## {source_name}")
+
             for i, article in enumerate(articles, 1):
                 markdown.append(f"### {i}. [{article.title}]({article.url})")
                 markdown.append(str(article.summary))
@@ -49,9 +46,9 @@ class DailyUpdateAgent:
                 continue
             analysed_article = await self.analyse_article(title)
             print(title)
-            print("is interesting:", analysed_article.is_interesting)
+            print("is interesting:", analysed_article.is_relevant)
             print("reason:", analysed_article.reason)
-            if not analysed_article.is_interesting:
+            if not analysed_article.is_relevant:
                 articles.append(Article(title=title, url=article_url))
                 print("---")
             else:
@@ -81,6 +78,6 @@ class DailyUpdateAgent:
         article = await self.summary_agent.run(text)
         return article.summary
 
-    async def analyse_article(self, title) -> InterestingArticle:
+    async def analyse_article(self, title) -> RelevantArticle:
         res = await self.interesting_article_agent.run(article_title=title)
         return res

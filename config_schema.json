@@ -1,0 +1,28 @@
+{
+  "properties": {
+    "relevance_guidelines": {
+      "default": "\n* The article is about LLMs\n* The article is about big AI companies like OpenAI, Anthropic, Google, Meta, etc...\n* The article is about fundraising or acquisitions in the AI space\n* The article is about prompt evaluations\n\n## Example 1\nInput:\nPerplexity's Carbon integration will make it easier for enterprises to connect their data to AI search\n\nOutput:\n{\n  \"reason\": \"The article is Perplexity's Carbon integration, that means the article does not meet the criteria\",\n  \"is_relevant\": false\n}\n",
+      "title": "Relevance Guidelines",
+      "type": "string"
+    },
+    "summarization_guidelines": {
+      "default": "",
+      "title": "Summarization Guidelines",
+      "type": "string"
+    },
+    "sources": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {
+        "venturebeat": "https://venturebeat.com/category/ai/",
+        "techcrunch": "https://techcrunch.com/category/artificial-intelligence/",
+        "huggingface": "https://huggingface.co/blog"
+      },
+      "title": "Sources",
+      "type": "object"
+    }
+  },
+  "title": "Config",
+  "type": "object"
+}

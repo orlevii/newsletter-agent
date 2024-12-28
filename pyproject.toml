@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "daily-update-agent"
-version = "0.1.0"
+name = "newsletter-agent"
+version = "0.0.1"
 description = ""
 authors = ["Or Levi <orlevi128@gmail.com>"]
 
@@ -10,6 +10,7 @@ beautifulsoup4 = "^4.12.3"
 requests = "^2.32.3"
 tenacity = "^9.0.0"
 pydantic-ai = "^0.0.15"
+pyyaml = "^6.0.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
@@ -20,12 +21,15 @@ ipdb = "^0.13.13"
 types-requests = "^2.32.0.20241016"
 types-beautifulsoup4 = "^4.12.0.20241020"
 python-dotenv = "^1.0.1"
+types-pyyaml = "^6.0.12.20241221"
 
 [tool.poe.tasks]
 format = "ruff format src"
 lint = "ruff check src"
 test = "pytest"
-mypy = "mypy -p daily_update_agent"
+mypy = "mypy -p newsletter_agent"
+# ----
+config_schema.script = "newsletter_agent.config_schema:main"
 
 [build-system]
 requires = ["poetry-core"]
