@@ -1,8 +1,12 @@
 import asyncio
+import json
 import random
 from datetime import datetime
 from pathlib import Path
 from string import ascii_lowercase
+
+from newsletter_agent.config import config
+from newsletter_agent.logger import logger
 
 try:
     from dotenv import load_dotenv
@@ -15,6 +19,8 @@ if load_dotenv is not None:
 
 async def main():
     from newsletter_agent.agent import DailyUpdateAgent
+
+    logger.debug("Config: %s", json.dumps(config.model_dump(), indent=2))
 
     markdown = await DailyUpdateAgent().run()
     current = datetime.now().strftime("%Y-%m-%d")

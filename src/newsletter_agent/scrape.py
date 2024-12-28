@@ -5,11 +5,13 @@ import requests
 from bs4 import BeautifulSoup
 from tenacity import retry, stop_after_attempt, wait_fixed
 
+from newsletter_agent.logger import logger
+
 T = TypeVar("T")
 MIN_WORDS = 5
 
 
-@retry(wait=wait_fixed(10), stop=stop_after_attempt(3), after=print)
+@retry(wait=wait_fixed(10), stop=stop_after_attempt(3), after=logger.debug)
 def make_request(url: str) -> str:
     headers = {
         "User-Agent": "curl/7.68.0"  # Adjust version to match your curl

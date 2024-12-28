@@ -1,6 +1,7 @@
 import json
 
 from newsletter_agent.config import config
+from newsletter_agent.logger import logger
 from newsletter_agent.models.article import Article
 from newsletter_agent.relevant_article_agent import (
     RelevantArticle,
@@ -29,32 +30,34 @@ class DailyUpdateAgent:
                 markdown.append(str(article.summary))
                 markdown.append("")
                 markdown.append("---")
-            print("---------------------")
+            logger.info("---------------------")
             ArticleRepository.insert(*all_articles)
         return "\n".join(markdown)
 
     async def _handle_source(self, source_name: str, url: str) -> list[Article]:
-        print("Scraping source:", source_name)
+        logger.info("Scraping source: %s", source_name)
         text, links = scrape_and_extract_text(url)
         article_links = self._find_articles(text, links)
 
-        print("Found articles:", json.dumps(list(article_links.keys()), indent=2))
+        logger.info(
+            "Found articles: %s", json.dumps(list(article_links.keys()), indent=2)
+        )
         articles = []
         for title, article_url in article_links.items():
             if ArticleRepository.find_by_url(article_url):
-                print("Article already exists in the database")
+                logger.info("Article already exists in the database")
                 continue
             analysed_article = await self.analyse_article(title)
-            print(title)
-            print("is interesting:", analysed_article.is_relevant)
-            print("reason:", analysed_article.reason)
+            logger.info(title)
+            logger.info(f"is relevant?: {analysed_article.is_relevant}")
+            logger.info(f"reason: {analysed_article.reason}")
             if not analysed_article.is_relevant:
                 articles.append(Article(title=title, url=article_url))
-                print("---")
+                logger.info("---")
             else:
                 summary = await self._summarize_article(article_url)
                 articles.append(Article(title=title, url=article_url, summary=summary))
-                print("---")
+                logger.info("---")
         return articles
 
     @classmethod
@@ -73,7 +76,7 @@ class DailyUpdateAgent:
         return {title: url for title, url in title_link_pairs if url}
 
     async def _summarize_article(self, article_url: str) -> str:
-        print("Summarizing article:", article_url)
+        logger.info("Summarizing article:", article_url)
         text, _ = scrape_and_extract_text(article_url)
         article = await self.summary_agent.run(text)
         return article.summary
