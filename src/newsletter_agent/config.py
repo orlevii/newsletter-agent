@@ -19,6 +19,8 @@ class Source(BaseModel):
 
 
 class Config(BaseModel):
+    model_name: str = "gpt-4o-mini"
+    base_url: str | None = None
     guidelines: Guidelines = Guidelines()
     sources: list[Source] = []
 
