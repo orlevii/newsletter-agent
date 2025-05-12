@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from pydantic_ai import Agent
 
 from newsletter_agent.config import config
+from newsletter_agent.llm import model
 
 
 class SummarisedArticle(BaseModel):
@@ -17,7 +18,7 @@ Summarize the following article in simple English.
 class SummaryAgent:
     def __init__(self) -> None:
         self.agent = Agent(  # type: ignore[var-annotated]
-            model="openai:gpt-4o-mini",
+            model=model,
             system_prompt=SYSTEM_PROMPT.format(
                 GUIDELINES=config.guidelines.summarization
             ).strip(),
